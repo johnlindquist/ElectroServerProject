@@ -22,7 +22,6 @@ package com.johnlindquist.multiplayer.controller
 			hero.x = 50;
 			hero.y = 50;
 			gameModel.heroes.add(hero);
-			
 		}
 	}
 }

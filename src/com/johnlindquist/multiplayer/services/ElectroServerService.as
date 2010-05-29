@@ -1,5 +1,6 @@
 package com.johnlindquist.multiplayer.services
 {
+	import com.johnlindquist.multiplayer.signals.ExisitingUsersFound;
 	import com.johnlindquist.multiplayer.services.data.HeroServerUpdateData;
 	import com.johnlindquist.multiplayer.signals.HeroServerUpdated;
 	import com.electrotank.electroserver4.esobject.EsObject;
@@ -58,6 +59,9 @@ package com.johnlindquist.multiplayer.services
 		
 		[Inject]
 		public var heroServerUpdate:HeroServerUpdated;
+		
+		[Inject]
+		public var existingUsersFound:ExisitingUsersFound;
 
 		public function ElectroServerService()
         {
@@ -65,7 +69,6 @@ package com.johnlindquist.multiplayer.services
             loginResponse = new Response();
             joinRoomResponse = new Response();
         }
-
 
         public function connect():IResponse
         {
@@ -136,6 +139,17 @@ package com.johnlindquist.multiplayer.services
             room = event.room;
             
             myUser = room.getUserById(myUserID);
+            
+            var everyoneButMe:Array = [];
+            for each(var user:User in room.getUsers())
+            {
+            	if(user != myUser)
+            	{
+					everyoneButMe.push(user);
+				}
+            }
+            
+            existingUsersFound.dispatch(everyoneButMe);
             
             myUserAdded.dispatch(myUser);
 		}

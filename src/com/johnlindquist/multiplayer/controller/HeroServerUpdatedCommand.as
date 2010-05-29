@@ -19,15 +19,15 @@ package com.johnlindquist.multiplayer.controller
 
 		override public function execute():void 
 		{
-			trace("executing update");
 			for each(var hero:Hero in gameModel.heroes.members)
 			{
-				trace(hero, gameModel.heroes);
-				if(heroServerUpdateData.id == hero.user.getUserId())
+				if(heroServerUpdateData.id != gameModel.myHero.user.getUserId())
 				{
-					trace('heroServerUpdateData.id: ' + (heroServerUpdateData.id));
-					hero.x = heroServerUpdateData.x;
-					hero.y = heroServerUpdateData.y;
+					if(heroServerUpdateData.id == hero.user.getUserId())
+					{
+						hero.x = heroServerUpdateData.x;
+						hero.y = heroServerUpdateData.y;
+					}
 				}
 			}
 		}

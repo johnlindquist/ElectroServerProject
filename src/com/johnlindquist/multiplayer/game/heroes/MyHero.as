@@ -28,7 +28,7 @@ package com.johnlindquist.multiplayer.game.heroes
 
             if (FlxG.keys.UP && onFloor)
             {
-                velocity.y = -75;
+                velocity.y = -100;
             }
             super.update();
 		}

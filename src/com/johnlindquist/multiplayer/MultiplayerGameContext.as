@@ -1,5 +1,7 @@
 package com.johnlindquist.multiplayer
 {
+	import com.johnlindquist.multiplayer.controller.ExisitingUsersFoundCommand;
+	import com.johnlindquist.multiplayer.signals.ExisitingUsersFound;
 	import com.johnlindquist.multiplayer.controller.HeroServerUpdatedCommand;
 	import com.johnlindquist.multiplayer.signals.HeroServerUpdated;
 	import com.johnlindquist.multiplayer.controller.HeroUpdatedCommand;
@@ -38,6 +40,7 @@ package com.johnlindquist.multiplayer
             mediatorMap.mapView(FlixelGame, FlixelGameMediator);
             mediatorMap.mapView(PlayState, PlayStateMediator);
             
+            signalCommandMap.mapSignalClass(ExisitingUsersFound, ExisitingUsersFoundCommand);
             signalCommandMap.mapSignalClass(UserAdded, UserAddedCommand);
             signalCommandMap.mapSignalClass(MyUserAdded, MyUserAddedCommand);
             signalCommandMap.mapSignalClass(HeroUpdated, HeroUpdatedCommand);

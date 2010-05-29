@@ -14,12 +14,13 @@ package com.johnlindquist.multiplayer.game.states
 	 */
 	public class PlayState extends FlxState 
 	{
-		
+
 		private var simpleMap:SimpleMap;
 
 		public var heroUpdated:HeroUpdated = new HeroUpdated();
 
 		private var _myHero:MyHero;
+
 		public function get myHero():MyHero
 		{
 			return _myHero;
@@ -30,15 +31,16 @@ package com.johnlindquist.multiplayer.game.states
 			_myHero = value;
 			myHero.x = 50;
 			myHero.y = 50;
-			heroes.add(myHero);			
+			add(myHero);			
 		}
 
 		override public function create():void
 		{
-			var flxText:FlxText = new FlxText(0, 0, 100, "My Awesome Game");
-			add(flxText);
 			simpleMap = new SimpleMap();
 			add(simpleMap);
+			
+			var flxText:FlxText = new FlxText(0, 0, 100, "My Awesome Game");
+			add(flxText);
 		}
 
 		override public function update():void 
@@ -51,20 +53,25 @@ package com.johnlindquist.multiplayer.game.states
 			
 			if(myHero != null)
 			{
-				 heroUpdated.dispatch(myHero);
+				heroUpdated.dispatch(myHero);
 			}
 		}
-		
+
 		private var _heroes:FlxGroup;
+
 		public function get heroes():FlxGroup
 		{
 			return _heroes;
 		}
-		
+
 		public function set heroes(heroes:FlxGroup):void
 		{
 			_heroes = heroes;
-			add(_heroes);
+		}
+
+		public function addHeroes(heroes:FlxGroup):void 
+		{
+			add(heroes);
 		}
 	}
 }
