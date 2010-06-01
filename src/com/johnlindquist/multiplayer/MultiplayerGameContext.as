@@ -1,5 +1,6 @@
 package com.johnlindquist.multiplayer
 {
+	import com.johnlindquist.multiplayer.game.model.Config;
 	import com.johnlindquist.multiplayer.controller.ExisitingUsersFoundCommand;
 	import com.johnlindquist.multiplayer.signals.ExisitingUsersFound;
 	import com.johnlindquist.multiplayer.controller.HeroServerUpdatedCommand;
@@ -34,6 +35,9 @@ package com.johnlindquist.multiplayer
 
         override public function startup():void
         {
+        	injector.mapValue(String, "config.xml", "config");
+        	
+            injector.mapSingleton(Config);
             injector.mapSingleton(GameModel);
             injector.mapSingleton(ElectroServerService);
 

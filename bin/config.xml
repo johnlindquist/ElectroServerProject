@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<ip>127.0.0.1</ip>
+	<port>9898</port>
+	<room>room1</room>
+	<zone>zone1</zone>
+</config>

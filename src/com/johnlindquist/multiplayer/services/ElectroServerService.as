@@ -28,10 +28,6 @@ package com.johnlindquist.multiplayer.services
      */
     public class ElectroServerService extends Actor
     {
-        private static const ROOM_NAME:String = "ROOM_NAME";
-
-        private static const ZONE_NAME:String = "ZONE_NAME";
-
         private var electroServer:ElectroServer;
 
         private var room:Room;
@@ -65,7 +61,7 @@ package com.johnlindquist.multiplayer.services
             joinRoomResponse = new Response();
         }
 
-        public function connect():IResponse
+        public function connect(ip:String, port:Number):IResponse
         {
             electroServer = new ElectroServer();
             electroServer.setProtocol(Protocol.TEXT);
@@ -75,7 +71,7 @@ package com.johnlindquist.multiplayer.services
             electroServer.addEventListener(MessageType.UserListUpdateEvent, "onUserListUpdate", this);
             electroServer.addEventListener(MessageType.UserVariableUpdateEvent, "onUserVariableUpdate", this);
             electroServer.addEventListener(MessageType.GetUserVariablesResponse, "onGetUserVariablesResponse", this);
-            electroServer.createConnection("127.0.0.1", 9898);
+            electroServer.createConnection(ip, port);
 
             return connectResponse;
         }
@@ -90,11 +86,11 @@ package com.johnlindquist.multiplayer.services
             return loginResponse;
         }
 
-        public function joinRoom():IResponse
+        public function joinRoom(roomName:String, zoneName:String):IResponse
         {
             var createRoomRequest:CreateRoomRequest = new CreateRoomRequest();
-            createRoomRequest.setRoomName(ROOM_NAME);
-            createRoomRequest.setZoneName(ZONE_NAME);
+            createRoomRequest.setRoomName(roomName);
+            createRoomRequest.setZoneName(zoneName);
             electroServer.send(createRoomRequest);
 
             return joinRoomResponse;
