@@ -1,8 +1,11 @@
 package com.johnlindquist.multiplayer.controller 
 {
+	import flight.domain.Command;
+
+	import com.electrotank.electroserver4.message.request.UpdateUserVariableRequest;
 	import com.johnlindquist.multiplayer.game.heroes.MyHero;
 	import com.johnlindquist.multiplayer.services.ElectroServerService;
-	import flight.domain.Command;
+	import com.johnlindquist.multiplayer.services.data.HeroUpdateData;
 	/**
 	 * @author John Lindquist
 	 */
@@ -17,7 +20,12 @@ package com.johnlindquist.multiplayer.controller
 		
 		override public function execute():void 
 		{
-			electroServerService.updateHero(myHero);
+			var update:UpdateUserVariableRequest = new UpdateUserVariableRequest();
+			update.setName("updateHero");
+			
+			var heroUpdate:HeroUpdateData = new HeroUpdateData(myHero.x, myHero.y);
+			update.setValue(heroUpdate);
+			electroServerService.send(update);
 		}
 	}
 }

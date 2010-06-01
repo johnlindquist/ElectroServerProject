@@ -2,6 +2,8 @@ package com.johnlindquist.multiplayer.controller
 {
 	import flight.domain.Command;
 
+	import com.electrotank.electroserver4.esobject.EsObject;
+	import com.electrotank.electroserver4.message.event.UserVariableUpdateEvent;
 	import com.johnlindquist.multiplayer.game.heroes.Hero;
 	import com.johnlindquist.multiplayer.game.model.GameModel;
 	import com.johnlindquist.multiplayer.services.data.HeroServerUpdateData;
@@ -12,13 +14,16 @@ package com.johnlindquist.multiplayer.controller
 	{
 
 		[Inject]
-		public var heroServerUpdateData:HeroServerUpdateData;
+		public var userVariableUpdateEvent:UserVariableUpdateEvent;
 
 		[Inject]
 		public var gameModel:GameModel;
 
 		override public function execute():void 
 		{
+			var heroUpdate:EsObject = userVariableUpdateEvent.getVariable().getValue() as EsObject;
+			var heroServerUpdateData:HeroServerUpdateData = new HeroServerUpdateData(userVariableUpdateEvent.getUserId(), heroUpdate.getFloat("x"), heroUpdate.getFloat("y"));
+			
 			for each(var hero:Hero in gameModel.heroes.members)
 			{
 				if(heroServerUpdateData.id != gameModel.myHero.user.getUserId())

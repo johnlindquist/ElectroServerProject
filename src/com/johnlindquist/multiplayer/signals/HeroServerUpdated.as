@@ -1,6 +1,6 @@
 package com.johnlindquist.multiplayer.signals 
 {
-	import com.johnlindquist.multiplayer.services.data.HeroServerUpdateData;
+	import com.electrotank.electroserver4.message.event.UserVariableUpdateEvent;
 
 	import org.osflash.signals.Signal;
 	/**
@@ -10,7 +10,7 @@ package com.johnlindquist.multiplayer.signals
 	{
 		public function HeroServerUpdated()
 		{
-			super(HeroServerUpdateData);
+			super(UserVariableUpdateEvent);
 		}
 	}
 }

@@ -1,35 +1,29 @@
 package com.johnlindquist.multiplayer.services
 {
-	import com.johnlindquist.multiplayer.signals.ExisitingUsersFound;
-	import com.johnlindquist.multiplayer.services.data.HeroServerUpdateData;
-	import com.johnlindquist.multiplayer.signals.HeroServerUpdated;
-	import com.electrotank.electroserver4.esobject.EsObject;
-	import com.electrotank.electroserver4.message.response.GetUserVariablesResponse;
-	import com.johnlindquist.multiplayer.services.data.HeroUpdateData;
-	import com.electrotank.electroserver4.message.request.UpdateUserVariableRequest;
-	import com.electrotank.electroserver4.entities.UserVariable;
-	import com.electrotank.electroserver4.message.event.UserVariableUpdateEvent;
-	import com.johnlindquist.multiplayer.game.heroes.MyHero;
-	import com.johnlindquist.multiplayer.signals.MyUserAdded;
-	import com.electrotank.electroserver4.user.User;
-	import com.johnlindquist.multiplayer.signals.UserAdded;
+	import flight.net.IResponse;
+	import flight.net.Response;
+
+	import com.electrotank.electroserver4.ElectroServer;
+	import com.electrotank.electroserver4.entities.Protocol;
+	import com.electrotank.electroserver4.message.Message;
+	import com.electrotank.electroserver4.message.MessageType;
+	import com.electrotank.electroserver4.message.event.ConnectionEvent;
+	import com.electrotank.electroserver4.message.event.JoinRoomEvent;
 	import com.electrotank.electroserver4.message.event.UserListUpdateEvent;
-    import flight.net.Response;
-    import flight.net.IResponse;
-    import com.electrotank.electroserver4.connection.Connection;
-    import com.electrotank.electroserver4.ElectroServer;
-    import com.electrotank.electroserver4.entities.Protocol;
-    import com.electrotank.electroserver4.message.MessageType;
-    import com.electrotank.electroserver4.message.event.ConnectionEvent;
-    import com.electrotank.electroserver4.message.event.JoinRoomEvent;
-    import com.electrotank.electroserver4.message.request.CreateRoomRequest;
-    import com.electrotank.electroserver4.message.request.LoginRequest;
-    import com.electrotank.electroserver4.message.response.LoginResponse;
-    import com.electrotank.electroserver4.room.Room;
+	import com.electrotank.electroserver4.message.event.UserVariableUpdateEvent;
+	import com.electrotank.electroserver4.message.request.CreateRoomRequest;
+	import com.electrotank.electroserver4.message.request.LoginRequest;
+	import com.electrotank.electroserver4.message.response.GetUserVariablesResponse;
+	import com.electrotank.electroserver4.message.response.LoginResponse;
+	import com.electrotank.electroserver4.room.Room;
+	import com.electrotank.electroserver4.user.User;
+	import com.johnlindquist.multiplayer.signals.ExisitingUsersFound;
+	import com.johnlindquist.multiplayer.signals.HeroServerUpdated;
+	import com.johnlindquist.multiplayer.signals.MyUserAdded;
+	import com.johnlindquist.multiplayer.signals.UserAdded;
 
-    import org.robotlegs.mvcs.Actor;
-
-    /**
+	import org.robotlegs.mvcs.Actor;
+	/**
      * @author John Lindquist
      */
     public class ElectroServerService extends Actor
@@ -48,11 +42,12 @@ package com.johnlindquist.multiplayer.services
 
         private var joinRoomResponse:Response;
         
-        [Inject]
-		public var userAdded:UserAdded;
 		private var myUserName:String;
 		private var myUserID:String;
 		private var myUser:User;
+
+        [Inject]
+		public var userAdded:UserAdded;
 		
 		[Inject]
 		public var myUserAdded:MyUserAdded;
@@ -164,9 +159,7 @@ package com.johnlindquist.multiplayer.services
 
 		public function onUserVariableUpdate(event:UserVariableUpdateEvent):void 
 		{
-			var heroUpdate:EsObject = event.getVariable().getValue() as EsObject;
-			var heroServerUpdateData:HeroServerUpdateData = new HeroServerUpdateData(event.getUserId(), heroUpdate.getFloat("x"), heroUpdate.getFloat("y"));
-			heroServerUpdate.dispatch(heroServerUpdateData);
+			heroServerUpdate.dispatch(event);
 		}
 
 		public function onGetUserVariablesResponse(event:GetUserVariablesResponse):void 
@@ -175,15 +168,9 @@ package com.johnlindquist.multiplayer.services
 		}
 
 		
-		public function updateHero(myHero:MyHero):void 
+		public function send(message:Message):void 
 		{
-			var update:UpdateUserVariableRequest = new UpdateUserVariableRequest();
-			update.setName("updateHero");
-			
-			var heroUpdate:HeroUpdateData = new HeroUpdateData(myHero.x, myHero.y);
-			update.setValue(heroUpdate);	
-			
-			electroServer.send(update);	
+			electroServer.send(message);	
 		}
 	}
 }
