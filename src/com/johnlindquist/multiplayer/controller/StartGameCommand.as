@@ -14,7 +14,7 @@ package com.johnlindquist.multiplayer.controller
 
         override public function execute():void
         {
-        	trace("starting game");
-        }
-    }
+			gameModel.status = gameModel.CLICK_TO_START;
+		}
+	}
 }

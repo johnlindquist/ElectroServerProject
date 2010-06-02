@@ -21,17 +21,83 @@ package com.johnlindquist.multiplayer.controller
 
 		override public function execute():void 
 		{
-			var heroUpdate:EsObject = userVariableUpdateEvent.getVariable().getValue() as EsObject;
-			var heroServerUpdateData:HeroServerUpdateData = new HeroServerUpdateData(userVariableUpdateEvent.getUserId(), heroUpdate.getFloat("x"), heroUpdate.getFloat("y"));
+			var hero:Hero;
+			var killerId:String = userVariableUpdateEvent.getUserId();
+			var userVarUserId:String;
+			var userId:String;
+			var killer:Hero;
 			
-			for each(var hero:Hero in gameModel.heroes.members)
+			if(userVariableUpdateEvent.getVariable().getName() == GameModel.HERO_RESET)
 			{
-				if(heroServerUpdateData.id != gameModel.myHero.user.getUserId())
+				for each(hero in gameModel.heroes.members)
 				{
-					if(heroServerUpdateData.id == hero.user.getUserId())
+					userVarUserId = userVariableUpdateEvent.getVariable().getValue().getString(GameModel.HERO_RESET_USERNAME);
+					userId = hero.user.getUserName();
+					if(userVarUserId == userId)
 					{
-						hero.x = heroServerUpdateData.x;
-						hero.y = heroServerUpdateData.y;
+						hero.exists = true;
+						hero.dead = false;
+						return;
+					}
+				}
+			}
+			
+			
+			
+			if(userVariableUpdateEvent.getVariable().getName() == GameModel.KILL_HERO)
+			{
+				for each(hero in gameModel.heroes.members)
+				{
+					if(killerId == hero.user.getUserId())
+					{
+						killer = hero;
+					}
+				}
+				
+				hero = gameModel.myHero;
+				if(killerId == hero.user.getUserId())
+				{
+					killer = hero;
+				}
+				
+				killer.score++;
+				
+				
+				for each(hero in gameModel.heroes.members)
+				{
+					userVarUserId = userVariableUpdateEvent.getVariable().getValue().getString(GameModel.KILL_ID);
+					userId = hero.user.getUserName();
+					if(userVarUserId == userId)
+					{
+						hero.kill();
+						return;
+					}
+				}
+				
+				hero = gameModel.myHero;
+				userId = hero.user.getUserName();
+				if(userVarUserId == userId)
+				{
+					hero.kill();
+					return;
+				}
+			}
+
+			if(userVariableUpdateEvent.getVariable().getName() == GameModel.HERO_UPDATED)
+			{
+				var heroUpdate:EsObject = userVariableUpdateEvent.getVariable().getValue() as EsObject;
+				var heroServerUpdateData:HeroServerUpdateData = new HeroServerUpdateData(userVariableUpdateEvent.getUserId(), heroUpdate.getFloat("x"), heroUpdate.getFloat("y"));
+				
+				for each(hero in gameModel.heroes.members)
+				{
+					if(heroServerUpdateData.id != gameModel.myHero.user.getUserId())
+					{
+						if(heroServerUpdateData.id == hero.user.getUserId())
+						{
+							hero.x = heroServerUpdateData.x;
+							hero.y = heroServerUpdateData.y;
+							return;
+						}
 					}
 				}
 			}

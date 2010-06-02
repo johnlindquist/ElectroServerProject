@@ -1,31 +1,31 @@
 package com.johnlindquist.multiplayer.controller 
 {
+	import com.johnlindquist.multiplayer.game.model.GameModel;
 	import flight.domain.Command;
 
+	import com.electrotank.electroserver4.esobject.EsObject;
 	import com.electrotank.electroserver4.message.request.UpdateUserVariableRequest;
-	import com.johnlindquist.multiplayer.game.heroes.MyHero;
-	import com.johnlindquist.multiplayer.game.model.GameModel;
+	import com.johnlindquist.multiplayer.game.heroes.OtherHero;
 	import com.johnlindquist.multiplayer.services.ElectroServerService;
-	import com.johnlindquist.multiplayer.services.data.HeroUpdateData;
 	/**
 	 * @author John Lindquist
 	 */
-	public class HeroUpdatedCommand extends Command 
+	public class OtherHeroKilledCommand extends Command 
 	{
 		[Inject]
-		public var myHero:MyHero;
+		public var otherHero:OtherHero;
 		
 		[Inject]
 		public var electroServerService:ElectroServerService;
-
-		
+	
 		override public function execute():void 
 		{
 			var update:UpdateUserVariableRequest = new UpdateUserVariableRequest();
-			update.setName(GameModel.HERO_UPDATED);
+			update.setName(GameModel.KILL_HERO);
 			
-			var heroUpdate:HeroUpdateData = new HeroUpdateData(myHero.x, myHero.y);
-			update.setValue(heroUpdate);
+			var esObject:EsObject = new EsObject();
+			esObject.setString(GameModel.KILL_ID, otherHero.user.getUserName());
+			update.setValue(esObject);
 			electroServerService.send(update);
 		}
 	}

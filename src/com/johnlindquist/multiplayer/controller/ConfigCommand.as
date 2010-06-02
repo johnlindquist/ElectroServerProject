@@ -1,5 +1,6 @@
 package com.johnlindquist.multiplayer.controller 
 {
+	import com.johnlindquist.multiplayer.game.model.GameModel;
 	import com.johnlindquist.multiplayer.game.model.Config;
 	import flight.domain.AsyncCommand;
 	/**
@@ -13,8 +14,12 @@ package com.johnlindquist.multiplayer.controller
 		[Inject]
 		public var config:Config;
 		
+		[Inject]
+		public var gameModel:GameModel;
+		
 		override public function execute():void 
 		{
+			gameModel.status = gameModel.LOADING_CONFIG;
 			response = config.load(path);	
 		}
 	}

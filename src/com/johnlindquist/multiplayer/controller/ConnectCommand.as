@@ -1,11 +1,11 @@
 package com.johnlindquist.multiplayer.controller
 {
-    import com.johnlindquist.multiplayer.game.model.Config;
-    import flight.domain.AsyncCommand;
+	import flight.domain.AsyncCommand;
 
-    import com.johnlindquist.multiplayer.services.ElectroServerService;
-
-    /**
+	import com.johnlindquist.multiplayer.game.model.Config;
+	import com.johnlindquist.multiplayer.game.model.GameModel;
+	import com.johnlindquist.multiplayer.services.ElectroServerService;
+	/**
      * @author John Lindquist
      */
     public class ConnectCommand extends AsyncCommand
@@ -15,10 +15,20 @@ package com.johnlindquist.multiplayer.controller
 		
         [Inject]
         public var electroServerService:ElectroServerService;
+        
+        [Inject]
+		public var gameModel:GameModel;
 
         override public function execute():void
         {
-            response = electroServerService.connect(config.properties.ip, config.properties.port);
+        	gameModel.status = gameModel.CONNECTING;
+			response = electroServerService.connect(config.properties.ip, config.properties.port);
+			response.addFaultHandler(onResponseFault);
 		}
-    }
+
+		private function onResponseFault(error:Error):void 
+		{
+			throw error;	
+		}
+	}
 }

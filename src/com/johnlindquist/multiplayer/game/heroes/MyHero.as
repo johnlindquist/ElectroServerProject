@@ -1,5 +1,9 @@
 package com.johnlindquist.multiplayer.game.heroes
 {
+	import com.johnlindquist.multiplayer.signals.OtherHeroKilled;
+
+	import org.flixel.FlxObject;
+
 	import com.electrotank.electroserver4.user.User;
 	import org.flixel.FlxG;
 	/**
@@ -7,6 +11,8 @@ package com.johnlindquist.multiplayer.game.heroes
      */
     public class MyHero extends Hero
 	{
+		public var otherHeroKilled:OtherHeroKilled = new OtherHeroKilled();
+				
 		public function MyHero(user:User)
         {
             super(user, 0, 0);
@@ -32,5 +38,15 @@ package com.johnlindquist.multiplayer.game.heroes
             }
             super.update();
 		}
-    }
+
+		
+		override public function hitBottom(contact:FlxObject, velocity:Number):void 
+		{
+			if(contact is OtherHero)
+			{
+				otherHeroKilled.dispatch(contact);
+			}
+			super.hitBottom(contact, velocity);
+		}
+	}
 }

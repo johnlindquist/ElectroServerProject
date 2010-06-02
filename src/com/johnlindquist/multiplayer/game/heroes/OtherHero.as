@@ -10,5 +10,10 @@ package com.johnlindquist.multiplayer.game.heroes
 		{
 			super(user, 50, 50);
 		}
+
+		override public function update():void 
+		{
+			super.update();
+		}
 	}
 }

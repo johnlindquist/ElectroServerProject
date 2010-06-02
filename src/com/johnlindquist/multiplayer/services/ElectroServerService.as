@@ -1,5 +1,8 @@
 package com.johnlindquist.multiplayer.services
 {
+	import com.johnlindquist.multiplayer.signals.UserLeft;
+	import com.electrotank.electroserver4.message.event.LeaveRoomEvent;
+	import com.johnlindquist.multiplayer.game.model.GameModel;
 	import flight.net.IResponse;
 	import flight.net.Response;
 
@@ -45,6 +48,9 @@ package com.johnlindquist.multiplayer.services
         [Inject]
 		public var userAdded:UserAdded;
 		
+		[Inject]		
+		public var userLeft:UserLeft;
+
 		[Inject]
 		public var myUserAdded:MyUserAdded;
 		
@@ -64,10 +70,11 @@ package com.johnlindquist.multiplayer.services
         public function connect(ip:String, port:Number):IResponse
         {
             electroServer = new ElectroServer();
-            electroServer.setProtocol(Protocol.TEXT);
+			electroServer.setProtocol(Protocol.TEXT);
             electroServer.addEventListener(MessageType.ConnectionEvent, "onConnectionEvent", this);
             electroServer.addEventListener(MessageType.LoginResponse, "onLoginResponse", this);
             electroServer.addEventListener(MessageType.JoinRoomEvent, "onJoinRoomEvent", this);
+            electroServer.addEventListener(MessageType.LeaveRoomEvent, "onLeaveRoomEvent", this);
             electroServer.addEventListener(MessageType.UserListUpdateEvent, "onUserListUpdate", this);
             electroServer.addEventListener(MessageType.UserVariableUpdateEvent, "onUserVariableUpdate", this);
             electroServer.addEventListener(MessageType.GetUserVariablesResponse, "onGetUserVariablesResponse", this);
@@ -105,7 +112,7 @@ package com.johnlindquist.multiplayer.services
             }
             else
             {
-                connectResponse.cancel(new Error("Failed to connect"));
+                connectResponse.cancel(new Error("Failed to connect. You're probably behind a firewall :("));
             }
         }
 
@@ -145,11 +152,21 @@ package com.johnlindquist.multiplayer.services
             myUserAdded.dispatch(myUser);
 		}
 
+        public function onLeaveRoomEvent(event:LeaveRoomEvent):void
+        {
+        	trace("do something");
+		}
+
 		public function onUserListUpdate(event:UserListUpdateEvent):void 
 		{
 			if(event.getActionId() == UserListUpdateEvent.AddUser)
 			{
 				userAdded.dispatch(event.getUser());
+			}
+			
+			if(event.getActionId() == UserListUpdateEvent.DeleteUser)
+			{
+				userLeft.dispatch(event.getUser());				
 			}
 		}
 
@@ -162,7 +179,6 @@ package com.johnlindquist.multiplayer.services
 		{
 			
 		}
-
 		
 		public function send(message:Message):void 
 		{

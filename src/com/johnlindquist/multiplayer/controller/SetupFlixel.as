@@ -2,7 +2,7 @@ package com.johnlindquist.multiplayer.controller
 {
 	import flight.domain.Command;
 
-	import org.flixel.FlixelGame;
+	import org.flixel.MyAwesomeGame;
 
 	import flash.display.DisplayObjectContainer;
 	/**
@@ -17,7 +17,7 @@ package com.johnlindquist.multiplayer.controller
 
         override public function execute():void
         {
-            contextView.addChild(new FlixelGame());
+            contextView.addChild(new MyAwesomeGame());
         }
     }
 }

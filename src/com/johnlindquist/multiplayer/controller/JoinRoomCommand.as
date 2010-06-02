@@ -3,9 +3,10 @@ package com.johnlindquist.multiplayer.controller
 	import flight.domain.AsyncCommand;
 
 	import com.johnlindquist.multiplayer.game.model.Config;
+	import com.johnlindquist.multiplayer.game.model.GameModel;
 	import com.johnlindquist.multiplayer.services.ElectroServerService;
 	/**
-     * @author John Lindquist
+	 * @author John Lindquist
      */
     public class JoinRoomCommand extends AsyncCommand
     {
@@ -15,9 +16,13 @@ package com.johnlindquist.multiplayer.controller
         [Inject]
         public var electroServerService:ElectroServerService;
 
+		[Inject]
+		public var gameModel:GameModel;
+
         override public function execute():void
         {
-            response = electroServerService.joinRoom(config.properties.room, config.properties.zone);
+        	gameModel.status = gameModel.JOINING_ROOM;
+			response = electroServerService.joinRoom(config.properties.room, config.properties.zone);
 		}
     }
 }

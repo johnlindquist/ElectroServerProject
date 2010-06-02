@@ -10,6 +10,11 @@ package com.johnlindquist.multiplayer.game.heroes
 	{
 		private var _user:User;
 
+		[Bindable]
+		public var score:uint = 0;
+		public var targetX:Number;
+		public var targetY:Number;
+
 		public function get user():User
 		{
 			return _user;
